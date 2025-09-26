@@ -1,0 +1,133 @@
+/* 2050 theme overrides using semantic tokens (exactly 5-color palette)
+   Neutrals: background, foreground, muted/card
+   Primary: neon-cyan
+   Accent: neon-green
+*/
+:root {
+  /* Exactly 5 base colors (aligned to reference) */
+  --background: #0b0c10; /* near-black */
+  --foreground: #f7f2fa; /* soft off-white */
+  --primary: #d946ef; /* magenta (primary) */
+  --accent: #7c3aed; /* violet (accent) */
+  --neutral: #151826; /* neutral surface */
+
+  /* Derived tokens (no new hexes) */
+  --muted: color-mix(in oklab, var(--neutral) 70%, var(--background));
+  --muted-foreground: color-mix(in oklab, var(--foreground) 60%, var(--background));
+  --card: color-mix(in oklab, var(--neutral) 85%, var(--background));
+  --border: color-mix(in oklab, var(--foreground) 10%, var(--background));
+  --bubble-bg: color-mix(in oklab, var(--neutral) 78%, var(--background));
+}
+
+/* Futuristic focus ring (uses primary/accent only) */
+*:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px color-mix(in oklab, var(--primary) 70%, transparent), 0 0 18px
+    color-mix(in oklab, var(--accent) 35%, transparent);
+}
+
+/* neon stage + wave background for the chat header area */
+.neon-stage {
+  position: relative;
+  isolation: isolate;
+}
+.neon-stage .neon-wave {
+  position: relative;
+  height: 120px;
+  border-radius: 9999px;
+  overflow: hidden;
+  background: radial-gradient(
+      120% 120% at 50% 120%,
+      color-mix(in oklab, var(--primary) 15%, transparent),
+      transparent 60%
+    ),
+    linear-gradient(
+      90deg,
+      color-mix(in oklab, var(--accent) 45%, transparent),
+      color-mix(in oklab, var(--primary) 55%, transparent)
+    );
+  filter: saturate(120%);
+}
+.neon-wave::before,
+.neon-wave::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.neon-wave::before {
+  /* moving bars to suggest an audio spectrum */
+  background: repeating-linear-gradient(
+    90deg,
+    color-mix(in oklab, var(--primary) 40%, transparent) 0 2px,
+    transparent 2px 8px
+  );
+  animation: wave-scan 6s linear infinite;
+  opacity: 0.35;
+}
+.neon-wave::after {
+  /* soft glow overlay */
+  background: radial-gradient(60% 180% at 50% 60%, color-mix(in oklab, var(--accent) 28%, transparent), transparent 60%),
+    radial-gradient(60% 180% at 50% 40%, color-mix(in oklab, var(--primary) 28%, transparent), transparent 60%);
+  mix-blend-mode: screen;
+  opacity: 0.6;
+}
+@keyframes wave-scan {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-160px);
+  }
+}
+
+/* premium chat bubble styles */
+.bubble {
+  position: relative;
+  max-width: min(80ch, 85%);
+  padding: 12px 14px;
+  border-radius: 18px;
+  background: color-mix(in oklab, var(--bubble-bg) 92%, transparent);
+  border: 1px solid var(--border);
+  /* neon edge using mask to keep inside border radius */
+  box-shadow: 0 0 0 1px color-mix(in oklab, var(--foreground) 6%, transparent) inset, 0 0 24px
+    color-mix(in oklab, var(--primary) 18%, transparent);
+  backdrop-filter: blur(4px);
+}
+.bubble-user {
+  align-self: flex-end;
+  background: color-mix(in oklab, var(--bubble-bg) 92%, transparent);
+  box-shadow: 0 0 0 1px color-mix(in oklab, var(--foreground) 6%, transparent) inset, 0 0 24px
+    color-mix(in oklab, var(--primary) 22%, transparent);
+}
+.bubble-assistant {
+  align-self: flex-start;
+  box-shadow: 0 0 0 1px color-mix(in oklab, var(--foreground) 6%, transparent) inset, 0 0 24px
+    color-mix(in oklab, var(--accent) 22%, transparent);
+}
+
+/* tiny caption above bubbles */
+.bubble-caption {
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted-foreground);
+  margin-bottom: 6px;
+}
+
+/* buttons within tool confirmations */
+.tool-action {
+  padding: 6px 10px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: color-mix(in oklab, var(--muted) 80%, transparent);
+  color: var(--foreground);
+}
+.tool-action.primary {
+  background: linear-gradient(
+    90deg,
+    color-mix(in oklab, var(--primary) 55%, transparent),
+    color-mix(in oklab, var(--accent) 45%, transparent)
+  );
+  color: var(--foreground);
+}
